@@ -1,1 +1,1 @@
-Task for the Shell Basics project in the ALX course
+Display the contents list of your current directory in along format

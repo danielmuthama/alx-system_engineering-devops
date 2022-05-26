@@ -1,1 +1,1 @@
-this directory contains scripts for the shell permissions project
+this is my alx
