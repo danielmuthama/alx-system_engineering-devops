@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-# displays its own PID.
-echp $$
+# my pid
+
+sleep 5 &
+echo "$!"
