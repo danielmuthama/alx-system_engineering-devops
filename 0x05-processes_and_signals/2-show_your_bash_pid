@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
-# list all bash processes
+# This script extends previous exercise command and displays line containing the bash word, this allowing you to easily get the PID of your Bash process
+# You cannot use pgrep
 # shellcheck disable=SC2009
-ps -auxf | grep bash
+
+./1-list_your_processes | grep "bash"

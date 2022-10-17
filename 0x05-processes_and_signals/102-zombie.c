@@ -5,7 +5,7 @@
 /**
  * infinite_while - a function that runs forever and returns nothing
  * Return: 0 in the end
-*/
+ */
 int infinite_while(void)
 {
 	while (1)
@@ -16,23 +16,25 @@ int infinite_while(void)
 }
 
 /**
- * main - the entry to a program that creats 5 zombie process
- * Return: 0 on sucess
-*/
+ * main - the entry to a program that creates 5 zombie process
+ * Return: 0 on success
+ */
 int main(void)
 {
-	int children_processes = 0;
+	int children = 0;
 	pid_t pid;
 
-	while (children_processes < 5)
+	while (children < 5)
 	{
 		pid = fork();
 		if (!pid)
 			break;
 		printf("Zombie process created, PID: %i\n", (int)pid);
-		children_processes++;
+		children++;
 	}
 	if (pid != 0)
+	{
 		infinite_while();
+	}
 	return (0);
 }
