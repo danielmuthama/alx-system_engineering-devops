@@ -1,32 +1,31 @@
-# 0x10. HTTPS SSL 
+0x10. HTTPS SSL
 
-<p align="center">
-  <img src="https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/276/FlhGPEK.png"/>
-</p>
+<br>
+<br>
+<center> <h2>Learning Objectives</h2> </center>
 
-## Resource
+At the end of this project, you are expected to be able to explain to anyone, without the help of Google:
+<br>
+<br>
+<center> <h2>General</h2> </center>
+What is HTTPS SSL 2 main roles
+What is the purpose encrypting traffic
+What SSL termination means
 
-- [What is HTTPS?](https://www.instantssl.com/http-vs-https)
-- [What are the 2 main elements that SSL is providing](https://www.sslshopper.com/why-ssl-the-purpose-of-using-ssl-certificates.html)
-- [HAProxy SSL termination on Ubuntu16.04](https://devops.ionos.com/tutorials/install-and-configure-haproxy-load-balancer-on-ubuntu-1604/)
-- [SSL termination](https://en.wikipedia.org/wiki/TLS_termination_proxy)
-- [Bash function](https://tldp.org/LDP/abs/html/complexfunct.html)
-- [How to Secure HAProxy with Let's Encrypt on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-secure-haproxy-with-let-s-encrypt-on-ubuntu-14-04)
-- [HAProxy SSL Termination](https://www.haproxy.com/blog/haproxy-ssl-termination/)
 
-## Tasks
 
-<details>
-<summary><a href="./0-world_wide_web">0. World wide web</a></summary><br>
-<a href='https://postimg.cc/w3QxtHzN' target='_blank'><img src='https://i.postimg.cc/Y2Jvsqyd/image.png' border='0' alt='image'/></a>
-</details>
+| Tasks | Files | Description |
+| ----- | ----- | ------ |
+| 0: Authors/README File | [AUTHORS](https://github.com/Oliveth96/alx-system_engineering-devops/0x10-https_ssl/AUTHORS) | Project authors |
+| 1: 0-world_wide_web | (https://github.com/Oliveth96/alx-system_engineering-devops/0x10-https_ssl/0-world_wide_web) |Configure your domain zone so that the subdomain www points to your load-balancer IP (lb-01). |
+| 2: 1-haproxy_ssl_termination | (https://github.com/Oliveth96/alx-system_engineering-devops/0x10-https_ssl/1-haproxy_ssl_termination) | Create a certificate using certbot and configure HAproxy to accept encrypted traffic for your subdomain |
+| 3: 100-redirect_http_to_https | (https://github.com/Oliveth96/alx-system_engineering-devops/0x10-https_ssl/100-redirect_http_to_https) | Configure HAproxy to automatically redirect HTTP traffic to HTTPS |
 
-<details>
-<summary><a href="./1-haproxy_ssl_termination">1. HAproxy SSL termination</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/jSy72SG2/image.png' border='0' alt='image'/></a>
-</details>
 
-<details>
-<summary><a href="./100-redirect_http_to_https">2. No loophole in your website traffic</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/Njtg78N1/image.png' border='0' alt='image'/></a>
-</details>
+
+
+
+
+
+
+

@@ -8,7 +8,7 @@ global
 	group haproxy
 	daemon
 
-	# Maximum size of temporary DHE keys that are generated
+	# Maximum size of temporarily generated DHE keys
 	tune.ssl.default-dh-param 2048
 
 	# Default SSL material locations
@@ -39,6 +39,7 @@ defaults
 
 frontend www-http-frontend
 	bind *:80
+	http-request redirect scheme https code 301 if !{ ssl_fc }
 	reqadd X-Forwarded-Proto:\ http
 	default_backend www-backend
 
@@ -51,7 +52,6 @@ frontend www-https-frontend
 
 backend www-backend
 	balance roundrobin
-	redirect scheme https if !{ ssl_fc }
 	server 801-web-01 35.196.167.155:80 check
 	server 801-web-02 34.73.252.236:80 check
 
