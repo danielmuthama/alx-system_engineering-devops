@@ -1,59 +1,60 @@
+#USE haproxy -f /etc/haproxy/haproxy.cfg -db
+#TO LOOK FOR ERRORS IF SOMETHING IS WRONG
 global
-	log /dev/log	local0
-	log /dev/log	local1 notice
-	chroot /var/lib/haproxy
-	stats socket /run/haproxy/admin.sock mode 660 level admin
-	stats timeout 30s
-	user haproxy
-	group haproxy
-	daemon
+        log /dev/log    local0
+        log /dev/log    local1 notice
+        chroot /var/lib/haproxy
+        stats socket /run/haproxy/admin.sock mode 660 level admin
+        stats timeout 30s
+        user haproxy
+        group haproxy
+        daemon
 
-	# Maximum size of temporarily generated DHE keys
-	tune.ssl.default-dh-param 2048
+        tune.ssl.default-dh-param 2048
 
-	# Default SSL material locations
-	ca-base /etc/ssl/certs
-	crt-base /etc/ssl/private
+        # Default SSL material locations
+        ca-base /etc/ssl/certs
+        crt-base /etc/ssl/private
 
-	# Default ciphers to use on SSL-enabled listening sockets.
-	# For more information, see ciphers(1SSL). This list is from:
-	#  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
-	ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
-	ssl-default-bind-options no-sslv3
+        # Default ciphers to use on SSL-enabled listening sockets.
+        # For more information, see ciphers(1SSL). This list is from:
+        #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
+        ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+        ssl-default-bind-options no-sslv3
 
 defaults
-	log	global
-	mode	http
-	option	httplog
-	option	dontlognull
+        log     global
+        mode    http
+        option  httplog
+        option  dontlognull
         timeout connect 5000
         timeout client  50000
         timeout server  50000
-	errorfile 400 /etc/haproxy/errors/400.http
-	errorfile 403 /etc/haproxy/errors/403.http
-	errorfile 408 /etc/haproxy/errors/408.http
-	errorfile 500 /etc/haproxy/errors/500.http
-	errorfile 502 /etc/haproxy/errors/502.http
-	errorfile 503 /etc/haproxy/errors/503.http
-	errorfile 504 /etc/haproxy/errors/504.http
+        errorfile 400 /etc/haproxy/errors/400.http
+        errorfile 403 /etc/haproxy/errors/403.http
+        errorfile 408 /etc/haproxy/errors/408.http
+        errorfile 500 /etc/haproxy/errors/500.http
+        errorfile 502 /etc/haproxy/errors/502.http
+        errorfile 503 /etc/haproxy/errors/503.http
+        errorfile 504 /etc/haproxy/errors/504.http
 
-frontend www-http-frontend
-	bind *:80
-	http-request redirect scheme https code 301 if !{ ssl_fc }
-	reqadd X-Forwarded-Proto:\ http
-	default_backend www-backend
+frontend ALL
+        bind *:80
+        bind *:443 ssl crt /etc/haproxy/certs/neuralfinances.tech.pem
+        mode http
 
-frontend www-https-frontend
-	bind *:443 ssl crt /etc/haproxy/certs/www.thefunk.tech.pem
-	reqadd X-Forwarded-Proto:\ https
-	acl letsencrypt-acl path_beg /.well-known/acme-challenge/
-	use_backend letsencrypt-backend if letsencrypt-acl
-	default_backend www-backend
+        acl is_letsencrypt path_beg -i /.well-known/acme-challenge/
+        use_backend letsencrypt if is_letsencrypt
+
+        default_backend www-backend
+
+        redirect scheme https code 301 if !{ ssl_fc } !is_letsencrypt
 
 backend www-backend
-	balance roundrobin
-	server 801-web-01 35.196.167.155:80 check
-	server 801-web-02 34.73.252.236:80 check
+        balance roundrobin
+        server 1576-web-01 34.74.112.45:80 check
+        server 1576-web-02 35.237.185.184:80 check
 
-backend letsencrypt-backend
-	server letsencrypt 197.211.58.30:54321
+backend l
+etsencrypt
+        server letsencrypt 127.0.0.1:8888
