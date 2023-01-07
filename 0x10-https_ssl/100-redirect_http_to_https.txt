@@ -1,16 +1,12 @@
-#USE haproxy -f /etc/haproxy/haproxy.cfg -db
-#TO LOOK FOR ERRORS IF SOMETHING IS WRONG
 global
         log /dev/log    local0
         log /dev/log    local1 notice
         chroot /var/lib/haproxy
-        stats socket /run/haproxy/admin.sock mode 660 level admin
+        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
         stats timeout 30s
         user haproxy
         group haproxy
         daemon
-
-        tune.ssl.default-dh-param 2048
 
         # Default SSL material locations
         ca-base /etc/ssl/certs
@@ -19,10 +15,13 @@ global
         # Default ciphers to use on SSL-enabled listening sockets.
         # For more information, see ciphers(1SSL). This list is from:
         #  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
-        ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+        # An alternative list with additional directives can be obtained from
+        #  https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=haproxy
+        ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:!aNULL:!MD5:!DSS
         ssl-default-bind-options no-sslv3
 
 defaults
+        option forwardfor
         log     global
         mode    http
         option  httplog
@@ -38,23 +37,24 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-frontend ALL
-        bind *:80
-        bind *:443 ssl crt /etc/haproxy/certs/neuralfinances.tech.pem
+listen thelaura
+        bind :80
         mode http
-
-        acl is_letsencrypt path_beg -i /.well-known/acme-challenge/
-        use_backend letsencrypt if is_letsencrypt
-
-        default_backend www-backend
-
-        redirect scheme https code 301 if !{ ssl_fc } !is_letsencrypt
-
-backend www-backend
         balance roundrobin
-        server 1576-web-01 34.74.112.45:80 check
-        server 1576-web-02 35.237.185.184:80 check
+        server 65687-web-01 35.174.207.234:80 check
+        server 65687-web-02 100.234.145.65:80 check
 
-backend l
-etsencrypt
-        server letsencrypt 127.0.0.1:8888
+frontend www-http
+        bind :80
+        reqadd X-Forwarded-Proto:\ http
+        default_backend web-backend
+
+frontend www-https
+        bind :443 ssl crt /etc/haproxy/ssl/www.thelaura.tech.pem
+        reqadd X-Forwarded-Proto:\ https
+        default_backend web-backend
+
+backend web-backend
+        http-request redirect scheme https code 301 if !{ ssl_fc }
+        server 65687-web-01 35.174.207.234:80 check
+        server 65687-web-02 100.25.155.52:80 check
