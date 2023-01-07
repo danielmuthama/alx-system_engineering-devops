@@ -2,7 +2,7 @@ global
 	log /dev/log	local0
 	log /dev/log	local1 notice
 	chroot /var/lib/haproxy
-	stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+	stats socket /run/haproxy/admin.sock mode 660 level admin
 	stats timeout 30s
 	user haproxy
 	group haproxy
@@ -32,22 +32,11 @@ defaults
 	errorfile 502 /etc/haproxy/errors/502.http
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
-
-# start of parameters for beta-scribbles.tech
-frontend betascribbles.tech-http-frontend
-	bind	 *:80
-	http-request set-header X-Forwarded-Proto http
-	default_backend	 beta-scribbles.tech-backend
-
-
-frontend  beta-scribbles.tech-https-frontend
-	bind *:443 ssl crt /etc/ssl/beta-scribbles.tech.pem
-	http-request set-header X-Forwarded-Proto https
-        default_backend beta-scribbles.tech-backend
-
-
-backend beta-scribbles.tech-backend
+frontend  monemax-frontend
+        bind *:443 ssl crt /etc/letsencrypt/live/www.monemax.tech/fullchain.pem
+        mode https
+        default_backend monemax-backend
+backend monemax-backend
         balance roundrobin
-        server 914-web-01 34.138.32.248:80 check
-        server 914-web-02 3.226.74.205:80 check
-# end of parameters
+        server 65687-web-01 35.174.207.234:80 check
+        server 65687-web-02 100.25.155.52:80 check
