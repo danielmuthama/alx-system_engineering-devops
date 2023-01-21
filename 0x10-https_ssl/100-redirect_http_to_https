@@ -38,14 +38,16 @@ defaults
 	option http-server-close
 
 frontend web_server
-	bind *:443 ssl crt /etc/haproxy/certs/www.ericwebserver.tech.pem
+	bind *:80
+	bind *:443 ssl crt /etc/haproxy/certs/ericwebserver.tech.pem
+	http-request set-header X-Forwarded-Proto https
 	acl letsencrypt-acl path_beg /.well-known/acme-challenge/
-	redirect scheme https if !{ ssl_fc }
 	use_backend letsencrypt-backend if letsencrypt-acl
 	default_backend web_server
 
 backend web_server
 	balance roundrobin
+	redirect scheme https code 301 if !{ ssl_fc }
 	server 18718-web-01 44.192.38.39:80 check
 	server 18718-web-02 44.192.17.182:80 check
 
