@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-# Script that will display information about subdomains
+# script to about subdomian
 
-DNS_info () {
-    ANSWER=$(dig $2 | grep -A1 'ANSWER SECTION:' | awk 'NR==2 {print $0}')
-    echo "The subdomain $1 is a $(echo $ANSWER | awk '{print $4}') record and points to $(echo $ANSWER | awk '{print $5}')"
-}
-
-if [[ $# == 1 ]]; then
-    subdomains=('www' 'lb-01' 'web-01' 'web-02')
-    for i in "${subdomains[@]}"; do
-	CONCAT="$i.$1"
-	DNS_info $i $CONCAT
-    done
+name=$2
+if [ "$#" -lt 2 ];
+then
+    dig +nocmd "www.$1" a +noall +answer | awk '{print "The subdomain www is a", $4, "record and points to", $5}'
+    dig +nocmd "lb-01.$1" a +noall +answer | awk '{print "The subdomain lb-01 is a", $4, "record and points to", $5}'
+    dig +nocmd "web-01.$1" a +noall +answer | awk '{print "The subdomain web-01 is a", $4, "record and points to", $5}'
+    dig +nocmd "web-02.$1" a +noall +answer | awk '{print "The subdomain web-02 is a", $4, "record and points to", $5}'
 else
-    CONCAT="$2.$1"
-    DNS_info $2 $CONCAT
+    name=$(dig +nocmd "$2.$1" a +noall +answer | cut -d '.' -f1)
+    record=$(dig +nocmd "$2.$1" a +noall +answer | awk '{print $4}')
+    add=$(dig +nocmd "$2.$1" a +noall +answer | awk '{print $5}')
+    echo "The subdomain $name is a $record record and points to $add"
 fi
