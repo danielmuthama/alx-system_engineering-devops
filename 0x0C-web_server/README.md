@@ -1,57 +1,67 @@
-# 0x0C. Web server
+# Web server
 
-<p align="center">
-  <img src="https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/266/8Gu52Qv.png" />
-</p>
+In this project, I learned how web servers work and began using one. I was
+provided a personal server by ALX. I learned how to use `scp`
+and Fabric to transfer files to my server. Additionally, I completed a basic
+configuration of the server using Nginx.
 
-## Resource
+The server is accessible at [bdbnb.site](http://bdbnb.site).
 
-<details>
-<summary><a href="https://www.gnu.org/software/libc/manual/html_node/Processes.html#Processes">Child Process</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/bw6hYBS5/image.png' border='0' alt='image'/></a>
-</details>
+## Tasks :page_with_curl:
 
-- [Background contenxt](https://www.youtube.com/watch?v=AZg4uJkEa-4)
-- [How the web works](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_Web_works)
-- [Nginx](https://en.wikipedia.org/wiki/Nginx)
-- [How to Configure Nginx](https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-server-blocks-virtual-hosts-on-ubuntu-16-04)
-- [Root and sub domain](https://landingi.com/help/domains-vs-subdomains/)
-- [HTTP requests](https://www.tutorialspoint.com/http/http_methods.htm)
-- [HTTP redirection](https://moz.com/learn/seo/redirection)
-- [Not found HTTP response code](https://en.wikipedia.org/wiki/HTTP_404)
-- [Logs files on Linux](https://www.cyberciti.biz/faq/ubuntu-linux-gnome-system-log-viewer/)
-- [RFC 7231 (HTTP/1.1)](https://datatracker.ietf.org/doc/html/rfc7231)
-- [RFC 7540 (HTTP/2)](https://datatracker.ietf.org/doc/html/rfc7540)
+* **0. Transfer a file to your server**
+  * [0-transfer_file](./0-transfer_file): Bash script that transfers a file
+  from Holberton's client to a server.
+  * Accepts four arguments:
+    * The path of the file to be transferred.
+    * The IP of the server to transfer the file to.
+    * The username that `scp` connects with.
+    * The path of the SSH privtae key that `scp` uses.
+  * `scp` transfers the file to the user home directory `~/`.
 
-## Tasks
+* **1. Install nginx web server**
+  * [1-install_nginx_web_server](./1-install_nginx_web_server): Bash script
+  that configures a new Ubuntu machine with Nginx.
+  * Nginx listens on port 80.
+  * When querying Nginx at its root `/` with a `curl` GET request,
+  it returns a page containing the string `Holberton School`.
 
-<details>
-<summary><a href="./0-transfer_file">0. Transfer a file to your server</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/j2P4SmgY/image.png' border='0' alt='image'/></a>
-</details>
+* **2. Setup a domain name**
+  * [2-setup_a_domain_name](./2-setup_a_domain_name): A text file containing
+  the domain name set up for the server through Gandi.
 
-<details>
-<summary><a href="./1-install_nginx_web_server">1. Install nginx web server</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/QMbf1FrY/image.png' border='0' alt='image'/></a>
-<a href='https://postimg.cc/621fsx68' target='_blank'><img src='https://i.postimg.cc/vTGqVGpt/image.png' border='0' alt='image'/></a>
-</details>
+* **3. Redirection**
+  * [3-redirection](./3-redirection): Bash script that configures a new Ubuntu
+  machine with Nginx.
+  * Setup is identical to [1-install_nginx_web_server](./1-install_nginx_web_server)
+  plus:
+    * The location `/redirect_me` returns a `301 Moved Permanently` redirection
+    to another page.
 
-<details>
-<summary><a href="./2-setup_a_domain_name">2. Setup a domain name</a></summary><br>
-<a href='https://postimg.cc/svdGgYqp' target='_blank'><img src='https://i.postimg.cc/L6htvvV0/image.png' border='0' alt='image'/></a>
-</details>
+* **4. Not found page 404**
+  * [4-not_found_page_404](./4-not_found_page_404): Bash script that configures
+  a new Ubuntu machine with Nginx.
+  * Setup is identical to [1-install_nginx_web_server](./1-install_nginx_web_server)
+  plus:
+    * Features a custom 404 page containing the string `Ceci n'est pas une page`.
 
-<details>
-<summary><a href="./3-redirection">3. Redirection</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/tTmZ8GqZ/image.png' border='0' alt='image'/></a>
-</details>
+* **5. Design a beautiful 404 page**
+  * A custom-designed 404 error page for my server, accessible at
+  [bdbnb.site/404](http://bdbnb.site/404).
 
-<details>
-<summary><a href="./4-not_found_page_404">4. Not found page 404</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/zvhdBrG6/image.png' border='0' alt='image'/></a>
-</details>
-
-<details>
-<summary><a href="./7-puppet_install_nginx_web_server.pp">5. Install Nginx web server (w/ Puppet)</a></summary><br>
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/Vs2dxb0D/image.png' border='0' alt='image'/></a>
-</details>
+* **6. Deploy fast, deploy well**
+  * [fabfile.py](./fabfile.py): A Python Fabric configuration file defining
+  the following functions:
+  * `pack`
+    * Usage: `fabric pack`
+    * Creates a tar gzipped archive of the current directory named
+    `holbertonwebapp.tar.gz` in the local directory.
+  * `deploy`
+    * Usage: `fabric -H <remote server IP> deploy`
+    * Uploads the archive `holbertonwebapp.tar.gz` to the `/tmp`
+    directory of the remote server.
+    * Creates the directory `/tmp/holbertonwebapp` in the remote server.
+    * Untars `holbertonwebapp.tar.gz` in the `/tmp/holbertonwebapp` directory
+    of the remote server.
+  * `clean`
+    * Deletes the archive `holbertonwebapp.tar.gz` in the local directory.
