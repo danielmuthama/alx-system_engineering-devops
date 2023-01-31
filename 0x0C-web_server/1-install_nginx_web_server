@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
 # Installs nginx server
-apt-get update
-apt-get -y install nginx
-ufw allow 'Nginx HTTP'
-echo "Hello World!" > /var/www/html/index.html
-service nginx start
+#apt-get update
+#apt-get -y install nginx
+#ufw allow 'Nginx HTTP'
+#echo "Hello World!" > /var/www/html/index.html
+#service nginx start
+
+#!/usr/bin/env bash
+# Install nginx on web server; Nginx should be listening on port 80
+# Querying Nginx at its root (/) with a GET request (requesting a page)
+# curl http://54.160.94.77/   --> returns string "Hello World!"
+# curl http://54.160.94.77/   --> returns header info
+
+sudo apt-get update && sudo apt-get -y install nginx && histchars=
+printf "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    location / {
+        return 200 \"%s\";
+    }
+}\n" "Hello World!\n" | sudo tee /etc/nginx/sites-available/default
+unset histchars && sudo service nginx stop && sudo service nginx start
