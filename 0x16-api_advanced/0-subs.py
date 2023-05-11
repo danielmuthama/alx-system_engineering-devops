@@ -1,14 +1,17 @@
 #!/usr/bin/python3
+''' task 0 module'''
+
 import requests
+import sys
 
 
 def number_of_subscribers(subreddit):
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
-    headers = headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0;\
-                         rv:68.0) Gecko/20100101 FirefoxFirefox/68.0'}
-    with requests.session() as client:
-        info = client.get(url, headers=headers, allow_redirects=False).json()
-        try:
-            return info.get('data', {}).get('subscribers', 0)
-        except Exception:
-            return 0
+    '''gets num of subs of a subreddit'''
+    headers = {'User-agent': 'test'}
+    subs = requests.get('https://www.reddit.com/r/{}/about.json'.format(
+        sys.argv[1]), allow_redirects=False, headers=headers)
+
+    if subs.status_code == 200:
+        return (subs.json()['data']['subscribers'])
+    else:
+        return 0
