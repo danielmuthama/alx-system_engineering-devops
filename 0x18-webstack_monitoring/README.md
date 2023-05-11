@@ -1,0 +1,2 @@
+# Webstack monitoring
+Organizations that depend on servers that are deployed in the cloud must implement server monitor solutions that help maintain the security of cloud servers while tracking their performance and availability. Server monitoring can have different objectives and track different key performance indicators (KPIs) based on the type of server, but the primary objective of server monitoring is always to protect the server from possible failure that would interrupt service availability.
